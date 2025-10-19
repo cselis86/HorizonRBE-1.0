@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
+                        .defaultSuccessUrl("http://localhost:8081/home", true)
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::permitAll);
@@ -79,7 +80,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:8080"); // Allow your frontend origin
+        configuration.addAllowedOrigin("http://localhost:8081"); // Allow your frontend origin
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
         configuration.addAllowedHeader("*"); // Allow all headers
         configuration.setAllowCredentials(true); // Allow credentials (e.g., cookies)
