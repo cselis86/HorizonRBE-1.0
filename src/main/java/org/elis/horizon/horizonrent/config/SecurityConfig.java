@@ -39,6 +39,7 @@ public class SecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/vaadin-login")
+                        .defaultSuccessUrl("http://localhost:8081/home", true)
                         .permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
