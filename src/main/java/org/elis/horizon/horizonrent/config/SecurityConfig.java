@@ -2,7 +2,6 @@ package org.elis.horizon.horizonrent.config;
 
 import org.elis.horizon.horizonrent.filter.JwtAuthFilter;
 import org.elis.horizon.horizonrent.filter.JwtAuthEntryPoint;
-import org.elis.horizon.horizonrent.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +33,6 @@ public class SecurityConfig {
     private JwtAuthEntryPoint authEntryPoint;
 
     @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -48,7 +44,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "/oauth2/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/dev/**").hasRole("Dev")
                         .requestMatchers("/qa/**").hasRole("QA")
