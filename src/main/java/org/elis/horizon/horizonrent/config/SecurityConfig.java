@@ -32,6 +32,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthEntryPoint authEntryPoint;
 
+
     @Autowired
     private UserDetailsService userDetailsService;
 

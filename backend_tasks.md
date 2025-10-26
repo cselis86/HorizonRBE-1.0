@@ -43,9 +43,14 @@ Determine and implement the deployment strategy for the `horizon-rent-ui` Vaadin
 
 *   Implemented in-memory user storage for JWT authentication.
 
+## 8. Global Exception Handling - COMPLETED
+
+*   Implemented a `GlobalExceptionHandler` to provide consistent JSON error responses for exceptions.
+*   Added a custom `ApiError` class for structured error messages.
+*   Added unit and integration tests to verify the exception handling.
+
 ## Next Steps
 
 *   **Implement Refresh Tokens:** Add support for refresh tokens to allow users to stay logged in for longer periods without having to re-enter their credentials.
 *   **Database Integration:** Replace the in-memory user storage with a database to persist user data.
 *   **Role-Based Authorization:** Enhance the authorization logic to support different user roles and permissions.
-*   **Error Handling:** Improve error handling and provide more specific error messages to the frontend.

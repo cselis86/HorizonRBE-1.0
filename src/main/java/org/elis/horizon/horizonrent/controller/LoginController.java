@@ -27,13 +27,9 @@ public class LoginController {
     @PostMapping("/login")
     public Map<String, String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("token", jwtUtil.generateToken(authRequest.getUsername()));
-            return response;
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
-        }
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtUtil.generateToken(authRequest.getUsername()));
+        return response;
     }
 
     // Inner class for authentication request payload
