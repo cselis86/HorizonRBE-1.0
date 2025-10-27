@@ -1,8 +1,9 @@
 package org.elis.horizon.horizonrent.repository;
 
 import org.elis.horizon.horizonrent.model.Address;
+import org.elis.horizon.horizonrent.model.Amenity;
+import org.elis.horizon.horizonrent.model.Image;
 import org.elis.horizon.horizonrent.model.Property;
-import org.elis.horizon.horizonrent.model.PropertyImage;
 import org.elis.horizon.horizonrent.model.PropertyStatus;
 import org.elis.horizon.horizonrent.model.PropertyType;
 import org.springframework.stereotype.Repository;
@@ -30,16 +31,15 @@ public class InMemoryPropertyRepository implements PropertyRepository {
                 null,
                 "Modern Downtown Loft",
                 "Beautiful apartment in the heart of downtown with stunning city views.",
-                new Address("123 Main St", "Austin", "TX", "78701", "USA"),
+                new Address("123 Main St", "Austin", "TX", "78701", "USA", null, null),
                 new BigDecimal("2800.00"),
-                2,
-                2,
+                Integer.valueOf(2),
+                Integer.valueOf(2),
                 1200,
                 PropertyType.APARTMENT,
                 PropertyStatus.AVAILABLE,
-                Arrays.asList("Gym", "Parking", "Pet Friendly"),
-                Arrays.asList(new PropertyImage("https://example.com/apt1_1.jpg", "Living Room"), new PropertyImage("https://example.com/apt1_2.jpg", "Kitchen")),
-                101L,
+                Arrays.asList(new Amenity(1L, "Gym"), new Amenity(2L, "Parking"), new Amenity(3L, "Pet Friendly")),
+                Arrays.asList(new Image(1L, "https://example.com/apt1_1.jpg", "Living Room"), new Image(2L, "https://example.com/apt1_2.jpg", "Kitchen")),
                 LocalDateTime.now().minusDays(5),
                 LocalDateTime.now()
         ));
@@ -47,16 +47,15 @@ public class InMemoryPropertyRepository implements PropertyRepository {
                 null,
                 "Spacious Family House",
                 "A lovely family home with a big yard in a quiet neighborhood.",
-                new Address("456 Oak Ave", "Seattle", "WA", "98101", "USA"),
+                new Address("456 Oak Ave", "Seattle", "WA", "98101", "USA", null, null),
                 new BigDecimal("550000.00"),
-                4,
-                3,
+                Integer.valueOf(4),
+                Integer.valueOf(3),
                 2500,
                 PropertyType.HOUSE,
                 PropertyStatus.AVAILABLE,
-                Arrays.asList("Garden", "Garage", "Fireplace"),
-                Arrays.asList(new PropertyImage("https://example.com/house1_1.jpg", "Exterior"), new PropertyImage("https://example.com/house1_2.jpg", "Backyard")),
-                102L,
+                Arrays.asList(new Amenity(4L, "Garden"), new Amenity(5L, "Garage"), new Amenity(6L, "Fireplace")),
+                Arrays.asList(new Image(3L, "https://example.com/house1_1.jpg", "Exterior"), new Image(4L, "https://example.com/house1_2.jpg", "Backyard")),
                 LocalDateTime.now().minusDays(10),
                 LocalDateTime.now().minusDays(2)
         ));
@@ -64,16 +63,15 @@ public class InMemoryPropertyRepository implements PropertyRepository {
                 null,
                 "Cozy Condo near the Beach",
                 "Perfect for a single person or a couple, close to the beach and local shops.",
-                new Address("789 Pine Ln", "Miami", "FL", "33101", "USA"),
+                new Address("789 Pine Ln", "Miami", "FL", "33101", "USA", null, null),
                 new BigDecimal("3500.00"),
-                1,
-                1,
+                Integer.valueOf(1),
+                Integer.valueOf(1),
                 750,
                 PropertyType.CONDO,
                 PropertyStatus.RENTED,
-                Arrays.asList("Pool", "Balcony"),
-                Arrays.asList(new PropertyImage("https://example.com/condo1_1.jpg", "Bedroom"), new PropertyImage("https://example.com/condo1_2.jpg", "Pool View")),
-                103L,
+                Arrays.asList(new Amenity(7L, "Pool"), new Amenity(8L, "Balcony")),
+                Arrays.asList(new Image(5L, "https://example.com/condo1_1.jpg", "Bedroom"), new Image(6L, "https://example.com/condo1_2.jpg", "Pool View")),
                 LocalDateTime.now().minusDays(15),
                 LocalDateTime.now().minusDays(7)
         ));

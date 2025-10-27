@@ -1,8 +1,9 @@
 package org.elis.horizon.horizonrent.repository;
 
 import org.elis.horizon.horizonrent.model.Address;
+import org.elis.horizon.horizonrent.model.Amenity;
+import org.elis.horizon.horizonrent.model.Image;
 import org.elis.horizon.horizonrent.model.Property;
-import org.elis.horizon.horizonrent.model.PropertyImage;
 import org.elis.horizon.horizonrent.model.PropertyStatus;
 import org.elis.horizon.horizonrent.model.PropertyType;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,10 +30,10 @@ class InMemoryPropertyRepositoryTest {
     }
 
     private Property createTestProperty(String title, String city, BigDecimal price, PropertyStatus status, PropertyType type) {
-        Address address = new Address("123 Test St", city, "CA", "90210", "USA");
-        List<String> amenities = Arrays.asList("Pool", "Gym");
-        List<PropertyImage> images = Arrays.asList(new PropertyImage("url1", "desc1"));
-        return new Property(null, title, "Description for " + title, address, price, 3, 2, 1500, type, status, amenities, images, 1L, LocalDateTime.now(), LocalDateTime.now());
+        Address address = new Address("123 Test St", city, "CA", "90210", "USA", null, null);
+        List<Amenity> amenities = Arrays.asList(new Amenity(1L, "Pool"), new Amenity(2L, "Gym"));
+        List<Image> images = Arrays.asList(new Image(1L, "url1", "desc1"));
+        return new Property(null, title, "Description for " + title, address, price, Integer.valueOf(3), Integer.valueOf(2), 1500, type, status, amenities, images, LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test
@@ -177,8 +179,8 @@ class InMemoryPropertyRepositoryTest {
 
     @Test
     void testSearchByCriteria_minBedrooms() {
-        repository.save(new Property(null, "Studio", "", new Address("", "City", "", "", ""), new BigDecimal("100"), 1, 1, 500, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, LocalDateTime.now(), LocalDateTime.now()));
-        repository.save(new Property(null, "Two Bed", "", new Address("", "City", "", "", ""), new BigDecimal("200"), 2, 1, 1000, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, LocalDateTime.now(), LocalDateTime.now()));
+        repository.save(new Property(null, "Studio", "", new Address("", "City", "", "", "", null, null), new BigDecimal("100"), Integer.valueOf(1), Integer.valueOf(1), 500, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), LocalDateTime.now()));
+        repository.save(new Property(null, "Two Bed", "", new Address("", "City", "", "", "", null, null), new BigDecimal("200"), Integer.valueOf(2), Integer.valueOf(1), 1000, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), LocalDateTime.now()));
 
         List<Property> results = repository.searchByCriteria(null, null, null, null, 2, null, null);
         assertEquals(1, results.size());
@@ -187,8 +189,8 @@ class InMemoryPropertyRepositoryTest {
 
     @Test
     void testSearchByCriteria_minBathrooms() {
-        repository.save(new Property(null, "One Bath", "", new Address("", "City", "", "", ""), new BigDecimal("100"), 1, 1, 500, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, LocalDateTime.now(), LocalDateTime.now()));
-        repository.save(new Property(null, "Two Bath", "", new Address("", "City", "", "", ""), new BigDecimal("200"), 2, 2, 1000, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, LocalDateTime.now(), LocalDateTime.now()));
+        repository.save(new Property(null, "One Bath", "", new Address("", "City", "", "", "", null, null), new BigDecimal("100"), Integer.valueOf(1), Integer.valueOf(1), 500, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), LocalDateTime.now()));
+        repository.save(new Property(null, "Two Bath", "", new Address("", "City", "", "", "", null, null), new BigDecimal("200"), Integer.valueOf(2), Integer.valueOf(2), 1000, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), LocalDateTime.now()));
 
         List<Property> results = repository.searchByCriteria(null, null, null, null, null, 2, null);
         assertEquals(1, results.size());
@@ -219,7 +221,7 @@ class InMemoryPropertyRepositoryTest {
 
     @Test
     void testSavePropertyGeneratesIdAndTimestamps() {
-        Property newProperty = new Property(null, "New Property", "Desc", new Address("", "", "", "", ""), BigDecimal.ONE, 1, 1, 100, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, null, null);
+        Property newProperty = new Property(null, "New Property", "Desc", new Address("", "", "", "", "", null, null), BigDecimal.ONE, Integer.valueOf(1), Integer.valueOf(1), 100, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), null, null);
         Property savedProperty = repository.save(newProperty);
 
         assertNotNull(savedProperty.getId());
@@ -230,7 +232,7 @@ class InMemoryPropertyRepositoryTest {
 
     @Test
     void testUpdatePropertyUpdatesTimestamp() throws InterruptedException {
-        Property newProperty = new Property(null, "New Property", "Desc", new Address("", "", "", "", ""), BigDecimal.ONE, 1, 1, 100, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, null, null, 1L, null, null);
+        Property newProperty = new Property(null, "New Property", "Desc", new Address("", "", "", "", "", null, null), BigDecimal.ONE, Integer.valueOf(1), Integer.valueOf(1), 100, PropertyType.APARTMENT, PropertyStatus.AVAILABLE, Collections.emptyList(), Collections.emptyList(), null, null);
         Property savedProperty = repository.save(newProperty);
         LocalDateTime initialUpdatedAt = savedProperty.getUpdatedAt();
 
