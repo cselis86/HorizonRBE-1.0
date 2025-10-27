@@ -3,6 +3,7 @@ package org.elis.horizon.horizonrent.service.impl;
 import org.elis.horizon.horizonrent.dto.PagedResponse;
 import org.elis.horizon.horizonrent.dto.PropertyDetailResponse;
 import org.elis.horizon.horizonrent.dto.PropertyListResponse;
+import org.elis.horizon.horizonrent.dto.PropertySearchRequest;
 import org.elis.horizon.horizonrent.model.Address;
 import org.elis.horizon.horizonrent.model.Amenity;
 import org.elis.horizon.horizonrent.model.Image;
@@ -52,5 +53,11 @@ public class PropertyServiceImpl implements PropertyService {
             );
         }
         return null;
+    }
+
+    @Override
+    public PagedResponse<PropertyListResponse> searchProperties(PropertySearchRequest searchRequest, int page, int size) {
+        // Dummy implementation - returns an empty PagedResponse for now
+        return PagedResponse.of(Collections.emptyList(), 0, page, size);
     }
 }

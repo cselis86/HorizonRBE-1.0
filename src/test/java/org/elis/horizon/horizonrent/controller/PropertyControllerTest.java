@@ -1,8 +1,10 @@
 package org.elis.horizon.horizonrent.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elis.horizon.horizonrent.dto.PagedResponse;
 import org.elis.horizon.horizonrent.dto.PropertyDetailResponse;
 import org.elis.horizon.horizonrent.dto.PropertyListResponse;
+import org.elis.horizon.horizonrent.dto.PropertySearchRequest;
 import org.elis.horizon.horizonrent.exception.PropertyNotFoundException;
 import org.elis.horizon.horizonrent.model.Address;
 import org.elis.horizon.horizonrent.model.Amenity;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,9 +31,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +46,9 @@ class PropertyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private PropertyController controller;
@@ -128,6 +138,47 @@ class PropertyControllerTest {
     void getPropertyById_WhenInvalidId_ShouldReturn400() throws Exception {
         mockMvc.perform(get("/api/properties/0")) // ID must be positive
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void searchProperties_WithValidCriteria_ShouldReturnResults() throws Exception {
+        // Arrange
+        PropertySearchRequest searchRequest = new PropertySearchRequest();
+        searchRequest.setCity("Austin");
+        searchRequest.setMinPrice(BigDecimal.valueOf(1000));
+        searchRequest.setMaxPrice(BigDecimal.valueOf(3000));
+
+        List<PropertyListResponse> properties = Arrays.asList(sampleProperty);
+        PagedResponse<PropertyListResponse> pagedResponse =
+                PagedResponse.of(properties, 1, 0, 10);
+
+        when(propertyService.searchProperties(any(PropertySearchRequest.class), eq(0), eq(10)))
+                .thenReturn(pagedResponse);
+
+        // Act & Assert
+        mockMvc.perform(post("/api/properties/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchRequest))
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
+    void searchProperties_WithInvalidPriceRange_ShouldReturn400() throws Exception {
+        // Arrange
+        PropertySearchRequest searchRequest = new PropertySearchRequest();
+        searchRequest.setMinPrice(BigDecimal.valueOf(3000));
+        searchRequest.setMaxPrice(BigDecimal.valueOf(1000)); // Invalid: min > max
+
+        // Act & Assert
+        mockMvc.perform(post("/api/properties/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(containsString("minPrice")));
     }
 
     private PropertyListResponse createSampleListResponse() {
