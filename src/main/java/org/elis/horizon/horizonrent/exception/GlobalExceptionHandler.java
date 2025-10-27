@@ -2,44 +2,42 @@ package org.elis.horizon.horizonrent.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import org.springframework.security.core.AuthenticationException;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiError> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<Object> handleInvalidParameterException(
+            InvalidParameterException ex, WebRequest request) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.UNAUTHORIZED.value(),
-                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
 
-        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGlobalException(Exception ex, WebRequest request) {
+    @ExceptionHandler(PropertyNotFoundException.class)
+    public ResponseEntity<Object> handlePropertyNotFoundException(
+            PropertyNotFoundException ex, WebRequest request) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
 
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }
-
-
-
-
-
-

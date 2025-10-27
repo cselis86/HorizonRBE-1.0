@@ -1,98 +1,33 @@
 package org.elis.horizon.horizonrent.dto;
 
-import java.util.List;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PagedResponse<T> {
     private List<T> content;
-    private int page;
-    private int size;
     private long totalElements;
     private int totalPages;
+    private int currentPage;
+    private int pageSize;
+    private boolean first;
     private boolean last;
 
-    public PagedResponse() {
-    }
-
-    public PagedResponse(List<T> content, int page, int size, long totalElements, int totalPages, boolean last) {
-        this.content = content;
-        this.page = page;
-        this.size = size;
-        this.totalElements = totalElements;
-        this.totalPages = totalPages;
-        this.last = last;
-    }
-
-    public List<T> getContent() {
-        return content;
-    }
-
-    public void setContent(List<T> content) {
-        this.content = content;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public long getTotalElements() {
-        return totalElements;
-    }
-
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public boolean isLast() {
-        return last;
-    }
-
-    public void setLast(boolean last) {
-        this.last = last;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PagedResponse<?> that = (PagedResponse<?>) o;
-        return page == that.page && size == that.size && totalElements == that.totalElements && totalPages == that.totalPages && last == that.last && Objects.equals(content, that.content);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(content, page, size, totalElements, totalPages, last);
-    }
-
-    @Override
-    public String toString() {
-        return "PagedResponse{" +
-               "content=" + content +
-               ", page=" + page +
-               ", size=" + size +
-               ", totalElements=" + totalElements +
-               ", totalPages=" + totalPages +
-               ", last=" + last +
-               '}';
+    public static <T> PagedResponse<T> of(List<T> content, long totalElements,
+                                           int page, int size) {
+        PagedResponse<T> response = new PagedResponse<>();
+        response.content = content;
+        response.totalElements = totalElements;
+        response.pageSize = size;
+        response.currentPage = page;
+        response.totalPages = (int) Math.ceil((double) totalElements / size);
+        response.first = page == 0;
+        response.last = page >= response.totalPages - 1;
+        return response;
     }
 }
