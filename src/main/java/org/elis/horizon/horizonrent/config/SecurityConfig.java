@@ -5,6 +5,7 @@ import org.elis.horizon.horizonrent.filter.JwtAuthEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,6 +41,7 @@ public class SecurityConfig {
     private PasswordEncoder passwordEncoder;
 
     @Bean
+    @Profile("!test") // Apply this configuration when the 'test' profile is NOT active
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -56,6 +58,19 @@ public class SecurityConfig {
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint));
 
+        return http.build();
+    }
+
+    @Bean
+    @Profile("test") // Apply this configuration ONLY when the 'test' profile IS active
+    public SecurityFilterChain testSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/properties/**").permitAll() // Allow access to property endpoints during tests
+                        .anyRequest().permitAll() // Allow all other requests during tests
+                );
         return http.build();
     }
 
