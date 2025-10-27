@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
@@ -59,5 +60,11 @@ public class PropertyServiceImpl implements PropertyService {
     public PagedResponse<PropertyListResponse> searchProperties(PropertySearchRequest searchRequest, int page, int size) {
         // Dummy implementation - returns an empty PagedResponse for now
         return PagedResponse.of(Collections.emptyList(), 0, page, size);
+    }
+
+    @Override
+    public List<PropertyListResponse> getFeaturedProperties(Integer limit) {
+        // Dummy implementation - returns an empty list for now
+        return Collections.emptyList();
     }
 }

@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -179,6 +180,28 @@ class PropertyControllerTest {
                         .content(objectMapper.writeValueAsString(searchRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(containsString("minPrice")));
+    }
+
+    @Test
+    void getFeaturedProperties_ShouldReturnList() throws Exception {
+        // Arrange
+        List<PropertyListResponse> properties = Arrays.asList(sampleProperty);
+        when(propertyService.getFeaturedProperties(10))
+            .thenReturn(properties);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/properties/featured")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value(1));
+    }
+
+    @Test
+    void getFeaturedProperties_WithInvalidLimit_ShouldReturn400() throws Exception {
+        mockMvc.perform(get("/api/properties/featured")
+                        .param("limit", "0")) // Invalid: limit < 1
+                .andExpect(status().isBadRequest());
     }
 
     private PropertyListResponse createSampleListResponse() {

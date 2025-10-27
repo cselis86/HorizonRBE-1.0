@@ -123,6 +123,26 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Get featured properties for homepage display.
+     * Returns the newest available properties.
+     *
+     * @param limit Maximum number of properties to return
+     * @return List of featured properties
+     */
+    @GetMapping("/featured")
+    public ResponseEntity<List<PropertyListResponse>> getFeaturedProperties(
+            @RequestParam(defaultValue = "10") @Min(1) @Max(50) Integer limit) {
+
+        logger.info("Fetching {} featured properties", limit);
+
+        List<PropertyListResponse> properties = propertyService.getFeaturedProperties(limit);
+
+        logger.info("Returning {} featured properties", properties.size());
+
+        return ResponseEntity.ok(properties);
+    }
+
     private void validateSearchRequest(PropertySearchRequest request) {
         if (request.getMinPrice() != null && request.getMaxPrice() != null) {
             if (request.getMinPrice().compareTo(request.getMaxPrice()) > 0) {
