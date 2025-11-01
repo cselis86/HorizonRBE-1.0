@@ -90,7 +90,7 @@ Determine and implement the deployment strategy for the `horizon-rent-ui` Vaadin
 - Handled exceptions appropriately
 - Wrote unit tests with mocked repository
 
-## TICKET-036: Create Property REST API Endpoints - **COMPLETED**
+## TICKET-036: Create Property REST API Endpoints - **COMPLETED** ✓
 **Description:** Implement REST controllers for property listing and search functionality.
 **Tasks:**
 - Created PropertyController class
@@ -108,7 +108,7 @@ Determine and implement the deployment strategy for the `horizon-rent-ui` Vaadin
 - InMemoryPropertyRepository is pre-populated with sample data in its constructor.
 - Further seeding for development profiles can be implemented in a dedicated seeder class.
 
-## TICKET-044: Write Integration Tests for Property Feature (Backend part) - **COMPLETED**
+## TICKET-044: Write Integration Tests for Property Feature (Backend part) - **COMPLETED** ✓
 **Description:** Comprehensive integration tests for the complete property listing feature.
 **Tasks:**
 - Wrote backend integration tests for all property endpoints

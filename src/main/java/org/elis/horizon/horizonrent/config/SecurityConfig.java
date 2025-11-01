@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/api/properties/**").permitAll()
                         .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/dev/**").hasRole("Dev")
                         .requestMatchers("/qa/**").hasRole("QA")
